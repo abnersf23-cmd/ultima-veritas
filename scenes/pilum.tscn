@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/pilum.gd" id="1_pilum"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pilum"]
+size = Vector2(14, 3)
+
+[node name="Pilum" type="Area2D"]
+collision_layer = 8
+collision_mask = 5
+monitorable = false
+script = ExtResource("1_pilum")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_pilum")
+
+[node name="Visual" type="ColorRect" parent="."]
+offset_left = -8.0
+offset_top = -1.0
+offset_right = 8.0
+offset_bottom = 1.0
+color = Color(0.82, 0.82, 0.86, 1)
