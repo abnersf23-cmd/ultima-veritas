@@ -51,15 +51,26 @@ func _ready() -> void:
 		_set_awake(false)
 
 
-## Faz o bárbaro sair da neblina e entrar na luta.
-func activate() -> void:
-	if active:
+## Faz o bárbaro surgir da neblina, ainda parado (por exemplo, durante um diálogo).
+func appear() -> void:
+	if visible:
 		return
-	active = true
-	_set_awake(true)
+	_player = get_tree().get_first_node_in_group("player")
+	if _player:
+		direction = 1 if _player.global_position.x > global_position.x else -1
+		visual.scale.x = direction
 	modulate.a = 0.0
 	show()
 	create_tween().tween_property(self, "modulate:a", 1.0, 0.4)
+
+
+## Faz o bárbaro entrar na luta (surge antes, se ainda estiver escondido).
+func activate() -> void:
+	if active:
+		return
+	appear()
+	active = true
+	_set_awake(true)
 
 
 func _set_awake(awake: bool) -> void:

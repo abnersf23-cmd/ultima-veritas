@@ -54,7 +54,7 @@ Os números que definem a sensação do jogo (velocidade, altura do pulo, duraç
 
 As falas ficam em `scripts/dialogue_data.gd`, separadas do código que as mostra. Uma fala com `"record": true` entra nos **autos**, as provas que Daniel vai usar nos interrogatórios. Para colocar uma cena na fase, adicione um nó `Area2D` com o script `dialogue_trigger.gd` e escreva o nome da cena em **Dialogue Id** no Inspetor.
 
-Uma fala também pode ter `"event"`: o nome de algo que acontece na fase junto com ela. Na Fronteira, a fala "Daniel, abaixa!" tem `"event": "lucius_aparece"`, e o `frontier.gd` faz o machado passar e Lucius surgir.
+Uma fala também pode ter `"event"`: o nome de algo que acontece na fase junto com ela. Na Fronteira, a fala "Daniel, cuidado! Abaixa!" tem `"event": "lucius_aparece"`, e o `frontier.gd` faz Lucius surgir, Daniel se abaixar e o machado passar.
 
 ## Fronteira bárbara
 
@@ -62,9 +62,9 @@ Uma fala também pode ter `"event"`: o nome de algo que acontece na fase junto c
 | --- | --- |
 | Despertar | Daniel acorda na neblina e a primeira conversa começa sozinha |
 | Mata | Pedras, galhos e troncos para aprender a pular, sem inimigos. Daniel ainda está desarmado |
-| Clareira | A emboscada: Daniel se abaixa, um machado passa por cima, Lucius aparece e entrega o gládio e o pilum. Três bárbaros saem da neblina, um deles arremessando machados. A neblina engrossa e a clareira se fecha até a luta acabar |
+| Clareira | A emboscada: três bárbaros saem da neblina e ficam parados enquanto falam. Lucius grita, Daniel se abaixa e um machado passa por cima. Daniel desconfia, mas aceita o gládio. Quando a conversa acaba, os bárbaros partem para cima. A neblina engrossa e a clareira se fecha até a luta acabar |
 | Resgate | Lucius vai até Daniel e os dois conversam. A neblina se abre e aparece a tela de fim |
 
-A fase não tem paredes à vista: os limites são invisíveis e o chão continua além da câmera, para a mata parecer aberta. O arremessador brilha laranja antes de jogar o machado; é a deixa para abaixar, esquivar ou pular.
+A fase não tem paredes à vista: os limites são invisíveis e o chão continua além da câmera, para a mata parecer aberta. Na Fronteira Daniel só recebe o gládio; o pilum vem mais adiante na história. O bárbaro arremessador de machados já existe, mas por enquanto só aparece na fase de teste: ele brilha laranja antes de jogar, a deixa para abaixar, esquivar ou pular.
 
 Se Daniel morrer na luta, ele volta na entrada da clareira, já armado, sem repetir o despertar. O mapa fica na lista `PLATFORMS` do `frontier.gd`.

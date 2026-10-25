@@ -31,8 +31,10 @@ enum State { NORMAL, ATTACKING, DODGING, HURT }
 @export var crouch_height := 14.0
 
 @export_group("Combate")
-## Sem armas, J e K não fazem nada. Na Fronteira, Lucius entrega o gládio e o pilum.
-@export var armed := true
+## Sem o gládio, J não faz nada. Na Fronteira, Lucius entrega o gládio.
+@export var has_sword := true
+## Sem o pilum, K não faz nada. Daniel ganha o pilum mais adiante na história.
+@export var has_pilum := true
 @export var max_health := 5
 @export var sword_damage := 1
 @export var attack_duration := 0.18
@@ -147,9 +149,9 @@ func _process_normal(delta: float) -> void:
 
 	_handle_jump()
 
-	if armed and Input.is_action_just_pressed("attack") and _attack_cooldown_timer <= 0.0:
+	if has_sword and Input.is_action_just_pressed("attack") and _attack_cooldown_timer <= 0.0:
 		_start_attack()
-	elif armed and Input.is_action_just_pressed("throw") and _pilum_cooldown_timer <= 0.0:
+	elif has_pilum and Input.is_action_just_pressed("throw") and _pilum_cooldown_timer <= 0.0:
 		_throw_pilum()
 	elif Input.is_action_just_pressed("dodge") and _dodge_cooldown_timer <= 0.0 and is_on_floor():
 		_start_dodge()

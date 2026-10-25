@@ -23,12 +23,15 @@ const ARENA_LEFT := 860.0
 ## Se Daniel morrer na luta, ele volta aqui em vez do começo da fase.
 const CHECKPOINT := Vector2(940, -1)
 
+## Velocidade de Lucius andando depois da luta (Daniel corre a 130).
+const LUCIUS_WALK_SPEED := 70.0
+
 const FOG_CALM := 0.12
 const FOG_THICK := 0.26
 const FOG_CLEAR := 0.04
 const GROUND_COLOR := Color(0.27, 0.24, 0.21)
 const CONTROLS_UNARMED := "A/D andar · Espaço pular · S abaixar · L esquiva · E falar · Tab autos"
-const CONTROLS_ARMED := "A/D andar · Espaço pular · S abaixar · J gládio · K pilum · L esquiva · E falar · Tab autos"
+const CONTROLS_ARMED := "A/D andar · Espaço pular · S abaixar · J gládio · L esquiva · E falar · Tab autos"
 
 ## Continua valendo quando a cena recarrega depois da morte.
 static var reached_ambush := false
@@ -59,6 +62,8 @@ func _ready() -> void:
 	lucius.hide()
 	end_label.hide()
 	item_label.hide()
+	# Na Fronteira Daniel só ganha o gládio; o pilum vem mais adiante.
+	player.has_pilum = false
 	_set_armed(reached_ambush)
 
 	for enemy in get_tree().get_nodes_in_group("ambush"):
@@ -92,13 +97,20 @@ func _process(delta: float) -> void:
 
 func _on_line_started(line: Dictionary) -> void:
 	match line.get("event", ""):
+		"barbaros_aparecem":
+			for enemy in get_tree().get_nodes_in_group("ambush"):
+				enemy.appear()
 		"lucius_aparece":
-			player.duck(0.8)
-			_throw_axe_over_player()
+			# Primeiro o grito, depois Daniel se abaixa e só então o machado passa.
 			_show_lucius()
+			var tween := create_tween()
+			tween.tween_interval(0.7)
+			tween.tween_callback(player.duck.bind(1.2))
+			tween.tween_interval(0.25)
+			tween.tween_callback(_throw_axe_over_player)
 		"lucius_entrega_arma":
 			_set_armed(true)
-			_show_item("Gládio e pilum recebidos")
+			_show_item("Gládio recebido")
 
 
 func _on_dialogue_finished(id: String) -> void:
@@ -126,16 +138,20 @@ func _on_enemy_died() -> void:
 		return
 	_arena_wall.queue_free()
 	_set_fog(FOG_CALM, 1.5)
-	# Lucius vai até Daniel antes de falar.
-	var target_x := player.global_position.x - 30.0
+	# Lucius respira e vai andando até Daniel, sem pressa, antes de falar.
+	var side := -1.0 if lucius.global_position.x < player.global_position.x else 1.0
+	var target_x := player.global_position.x + side * 30.0
+	var distance := absf(target_x - lucius.global_position.x)
+	lucius.scale.x = -side # vira de frente para Daniel
 	var tween := create_tween()
-	tween.tween_property(lucius, "global_position:x", target_x, 0.6)
-	tween.tween_interval(0.5)
+	tween.tween_interval(0.8)
+	tween.tween_property(lucius, "global_position:x", target_x, clampf(distance / LUCIUS_WALK_SPEED, 0.4, 3.5))
+	tween.tween_interval(0.4)
 	tween.tween_callback(Dialogue.start.bind("fronteira_resgate"))
 
 
 func _set_armed(value: bool) -> void:
-	player.armed = value
+	player.has_sword = value
 	controls_label.text = CONTROLS_ARMED if value else CONTROLS_UNARMED
 
 
