@@ -13,6 +13,8 @@ config/features=PackedStringArray("4.3", "GL Compatibility")
 [autoload]
 
 Controls="*res://scripts/controls.gd"
+Dialogue="*res://scripts/dialogue_manager.gd"
+DialogueBox="*res://scenes/dialogue_box.tscn"
 
 [display]
 

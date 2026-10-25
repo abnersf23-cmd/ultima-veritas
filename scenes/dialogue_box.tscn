@@ -1,0 +1,78 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/dialogue_box.gd" id="1_box"]
+
+[node name="DialogueBox" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_box")
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 16.0
+offset_top = 244.0
+offset_right = 624.0
+offset_bottom = 328.0
+
+[node name="Portrait" type="ColorRect" parent="Panel"]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 76.0
+offset_bottom = 76.0
+color = Color(0.4, 0.4, 0.45, 1)
+
+[node name="NameLabel" type="Label" parent="Panel"]
+offset_left = 86.0
+offset_top = 6.0
+offset_right = 400.0
+offset_bottom = 22.0
+theme_override_colors/font_color = Color(0.95, 0.8, 0.45, 1)
+theme_override_font_sizes/font_size = 12
+
+[node name="TextLabel" type="Label" parent="Panel"]
+offset_left = 86.0
+offset_top = 24.0
+offset_right = 598.0
+offset_bottom = 76.0
+theme_override_font_sizes/font_size = 12
+autowrap_mode = 3
+
+[node name="ContinueHint" type="Label" parent="Panel"]
+offset_left = 540.0
+offset_top = 64.0
+offset_right = 600.0
+offset_bottom = 80.0
+theme_override_font_sizes/font_size = 10
+text = "[E] ▸"
+horizontal_alignment = 2
+
+[node name="RecordsPanel" type="Panel" parent="."]
+offset_left = 120.0
+offset_top = 30.0
+offset_right = 520.0
+offset_bottom = 250.0
+
+[node name="Title" type="Label" parent="RecordsPanel"]
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 388.0
+offset_bottom = 26.0
+theme_override_colors/font_color = Color(0.95, 0.8, 0.45, 1)
+theme_override_font_sizes/font_size = 14
+text = "AUTOS  (Tab para fechar)"
+
+[node name="RecordsList" type="Label" parent="RecordsPanel"]
+offset_left = 12.0
+offset_top = 34.0
+offset_right = 388.0
+offset_bottom = 212.0
+theme_override_font_sizes/font_size = 11
+autowrap_mode = 3
+
+[node name="RecordToast" type="Label" parent="."]
+offset_left = 440.0
+offset_top = 8.0
+offset_right = 632.0
+offset_bottom = 24.0
+theme_override_colors/font_color = Color(0.95, 0.8, 0.45, 1)
+theme_override_font_sizes/font_size = 11
+text = "Fala registrada nos autos"
+horizontal_alignment = 2
