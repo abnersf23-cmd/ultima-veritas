@@ -9,6 +9,7 @@ const SPEAKER_COLORS := {
 	"Lucius": Color(0.72, 0.22, 0.2),
 	"Hilde": Color(0.36, 0.55, 0.38),
 	"Narrador": Color(0.4, 0.4, 0.45),
+	"Bárbaro": Color(0.3, 0.42, 0.3),
 }
 
 @export var characters_per_second := 40.0

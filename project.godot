@@ -7,7 +7,7 @@ config_version=5
 
 config/name="Ultima Veritas"
 config/description="RPG de ação 2D lateral numa Roma que nunca caiu."
-run/main_scene="res://scenes/test_level.tscn"
+run/main_scene="res://scenes/frontier.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 
 [autoload]
