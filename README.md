@@ -65,6 +65,8 @@ Uma fala também pode ter `"event"`: o nome de algo que acontece na fase junto c
 | Clareira | A emboscada: três bárbaros saem da neblina e ficam parados enquanto falam. Lucius grita, Daniel se abaixa e um machado passa por cima. Daniel desconfia, mas aceita o gládio. Quando a conversa acaba, os bárbaros partem para cima. A neblina engrossa e a clareira se fecha até a luta acabar |
 | Resgate | Lucius vai até Daniel e os dois conversam. A neblina se abre e aparece a tela de fim |
 
-A fase não tem paredes à vista: os limites são invisíveis e o chão continua além da câmera, para a mata parecer aberta. Na Fronteira Daniel só recebe o gládio; o pilum vem mais adiante na história. O bárbaro arremessador de machados já existe, mas por enquanto só aparece na fase de teste: ele brilha laranja antes de jogar, a deixa para abaixar, esquivar ou pular.
+A fase não tem paredes à vista: os limites são invisíveis e o chão continua além da câmera, para a mata parecer aberta. Nos diálogos da Fronteira, Daniel se vira para quem está falando, e Lucius se vira para Daniel. Quando o próprio Daniel fala, ele continua olhando para quem falou por último.
+
+Na Fronteira Daniel só recebe o gládio; o pilum vem mais adiante na história. O bárbaro arremessador de machados já existe, mas por enquanto só aparece na fase de teste: ele brilha laranja antes de jogar, a deixa para abaixar, esquivar ou pular.
 
 Se Daniel morrer na luta, ele volta na entrada da clareira, já armado, sem repetir o despertar. O mapa fica na lista `PLATFORMS` do `frontier.gd`.
