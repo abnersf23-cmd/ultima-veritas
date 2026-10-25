@@ -17,6 +17,11 @@ position = Vector2(530, -61)
 [node name="Barbarian2" parent="." instance=ExtResource("3_enemy")]
 position = Vector2(950, -1)
 
+[node name="AxeThrower" parent="." instance=ExtResource("3_enemy")]
+position = Vector2(1150, -1)
+max_health = 2
+throws_axes = true
+
 [node name="RescueDialogue" type="Area2D" parent="."]
 position = Vector2(90, 0)
 script = ExtResource("4_trigger")

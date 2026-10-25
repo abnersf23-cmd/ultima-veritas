@@ -28,18 +28,19 @@ color = Color(0.1, 0.1, 0.12, 1)
 position = Vector2(0, -1)
 
 [node name="Barbarian1" parent="." groups=["ambush"] instance=ExtResource("3_enemy")]
-position = Vector2(1200, -1)
+position = Vector2(1120, -1)
+chase_distance = 400.0
 active = false
 
 [node name="Barbarian2" parent="." groups=["ambush"] instance=ExtResource("3_enemy")]
-position = Vector2(1300, -1)
+position = Vector2(1190, -1)
+chase_distance = 400.0
 active = false
 
-[node name="AxeThrower" parent="." groups=["ambush"] instance=ExtResource("3_enemy")]
-position = Vector2(1410, -1)
-max_health = 2
+[node name="Barbarian3" parent="." groups=["ambush"] instance=ExtResource("3_enemy")]
+position = Vector2(1270, -1)
+chase_distance = 400.0
 active = false
-throws_axes = true
 
 [node name="AmbushTrigger" type="Area2D" parent="."]
 position = Vector2(1000, 0)
@@ -73,7 +74,7 @@ offset_right = 520.0
 offset_bottom = 60.0
 theme_override_colors/font_color = Color(0.95, 0.8, 0.45, 1)
 theme_override_font_sizes/font_size = 14
-text = "Gládio e pilum recebidos"
+text = "Gládio recebido"
 horizontal_alignment = 1
 
 [node name="EndLabel" type="Label" parent="HUD"]
