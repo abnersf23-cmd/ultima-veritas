@@ -104,12 +104,17 @@ func _tick_timers(delta: float) -> void:
 func _process_normal(delta: float) -> void:
 	_apply_gravity(delta)
 
-	var direction := Input.get_axis("move_left", "move_right")
+	# Durante um diálogo, Daniel para e não aceita comandos.
+	var can_act := not Dialogue.is_active
+	var direction := Input.get_axis("move_left", "move_right") if can_act else 0.0
 	if direction != 0.0:
 		facing = int(signf(direction))
 		velocity.x = move_toward(velocity.x, direction * max_speed, acceleration * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, friction * delta)
+
+	if not can_act:
+		return
 
 	_handle_jump()
 

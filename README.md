@@ -23,6 +23,8 @@ O projeto está na fase de **greybox**: tudo é feito de blocos coloridos, sem a
 | J | Golpe de gládio |
 | K | Arremessar o pilum |
 | L ou Shift | Esquiva (fica invencível por um instante) |
+| E ou Enter | Avançar o diálogo |
+| Tab | Abrir os autos (as provas registradas) |
 
 ## Estrutura
 
@@ -35,5 +37,13 @@ O projeto está na fase de **greybox**: tudo é feito de blocos coloridos, sem a
 | `scripts/enemy.gd` | Bárbaro de teste: patrulha, perseguição, dano e morte |
 | `scripts/pilum.gd` | A lança de arremesso |
 | `scripts/test_level.gd` | Monta as plataformas da fase de teste |
+| `scripts/dialogue_data.gd` | **Todas as falas do jogo.** Para escrever uma cena, edite este arquivo |
+| `scripts/dialogue_manager.gd` | Controla o diálogo atual e guarda os autos |
+| `scripts/dialogue_box.gd` | Caixa de texto, retrato e painel dos autos |
+| `scripts/dialogue_trigger.gd` | Área que começa um diálogo quando Daniel entra nela |
 
 Os números que definem a sensação do jogo (velocidade, altura do pulo, duração da esquiva) aparecem no **Inspetor** do Godot ao selecionar o nó `Player`, e podem ser ajustados sem mexer no código.
+
+## Diálogos e autos
+
+As falas ficam em `scripts/dialogue_data.gd`, separadas do código que as mostra. Uma fala com `"record": true` entra nos **autos**, as provas que Daniel vai usar nos interrogatórios. Para colocar uma cena na fase, adicione um nó `Area2D` com o script `dialogue_trigger.gd` e escreva o nome da cena em **Dialogue Id** no Inspetor.

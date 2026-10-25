@@ -10,6 +10,8 @@ const ACTIONS := {
 	"attack": [KEY_J],
 	"throw": [KEY_K],
 	"dodge": [KEY_L, KEY_SHIFT],
+	"interact": [KEY_E, KEY_ENTER],
+	"records": [KEY_TAB],
 }
 
 
