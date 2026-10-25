@@ -22,6 +22,7 @@ Ao apertar **F5**, o jogo abre na **Fronteira bárbara**, a primeira fase da fat
 | --- | --- |
 | A / D ou setas | Andar |
 | Espaço, W ou seta para cima | Pular (segure para pular mais alto) |
+| S ou seta para baixo | Abaixar (machados passam por cima) |
 | J | Golpe de gládio |
 | K | Arremessar o pilum |
 | L ou Shift | Esquiva (fica invencível por um instante) |
@@ -36,8 +37,9 @@ Ao apertar **F5**, o jogo abre na **Fronteira bárbara**, a primeira fase da fat
 | `scenes/` | As cenas: jogador, inimigo, pilum, a Fronteira e a fase de teste |
 | `scripts/controls.gd` | Registra os controles do teclado |
 | `scripts/player.gd` | Daniel: movimento, pulo, ataque, arremesso, esquiva e vida |
-| `scripts/enemy.gd` | Bárbaro de teste: patrulha, perseguição, dano e morte |
+| `scripts/enemy.gd` | Bárbaro: patrulha, perseguição, dano e morte. Com **Throws Axes** ligado vira arremessador |
 | `scripts/pilum.gd` | A lança de arremesso |
+| `scripts/axe.gd` | O machado que os bárbaros arremessam, na altura da cabeça |
 | `scripts/greybox_level.gd` | Base das fases: monta as plataformas e liga a vida ao HUD |
 | `scripts/frontier.gd` | Fronteira bárbara: mapa, neblina, fundo com árvores e os eventos da emboscada |
 | `scripts/test_level.gd` | Plataformas da fase de teste |
@@ -59,8 +61,10 @@ Uma fala também pode ter `"event"`: o nome de algo que acontece na fase junto c
 | Trecho | O que acontece |
 | --- | --- |
 | Despertar | Daniel acorda na neblina e a primeira conversa começa sozinha |
-| Mata | Pedras, galhos e troncos para aprender a pular, sem inimigos |
-| Clareira | A emboscada: um machado passa por cima de Daniel, Lucius aparece e dois bárbaros saem da neblina. A clareira se fecha até a luta acabar |
+| Mata | Pedras, galhos e troncos para aprender a pular, sem inimigos. Daniel ainda está desarmado |
+| Clareira | A emboscada: Daniel se abaixa, um machado passa por cima, Lucius aparece e entrega o gládio e o pilum. Três bárbaros saem da neblina, um deles arremessando machados. A neblina engrossa e a clareira se fecha até a luta acabar |
 | Resgate | Lucius vai até Daniel e os dois conversam. A neblina se abre e aparece a tela de fim |
 
-Se Daniel morrer na luta, ele volta na entrada da clareira, sem repetir o despertar. O mapa fica na lista `PLATFORMS` do `frontier.gd`.
+A fase não tem paredes à vista: os limites são invisíveis e o chão continua além da câmera, para a mata parecer aberta. O arremessador brilha laranja antes de jogar o machado; é a deixa para abaixar, esquivar ou pular.
+
+Se Daniel morrer na luta, ele volta na entrada da clareira, já armado, sem repetir o despertar. O mapa fica na lista `PLATFORMS` do `frontier.gd`.

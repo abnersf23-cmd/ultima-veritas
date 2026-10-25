@@ -32,8 +32,14 @@ position = Vector2(1200, -1)
 active = false
 
 [node name="Barbarian2" parent="." groups=["ambush"] instance=ExtResource("3_enemy")]
-position = Vector2(1340, -1)
+position = Vector2(1300, -1)
 active = false
+
+[node name="AxeThrower" parent="." groups=["ambush"] instance=ExtResource("3_enemy")]
+position = Vector2(1410, -1)
+max_health = 2
+active = false
+throws_axes = true
 
 [node name="AmbushTrigger" type="Area2D" parent="."]
 position = Vector2(1000, 0)
@@ -58,7 +64,17 @@ offset_top = 336.0
 offset_right = 632.0
 offset_bottom = 352.0
 theme_override_font_sizes/font_size = 10
-text = "A/D andar · Espaço pular · J gládio · K pilum · L esquiva · E falar · Tab autos"
+text = "A/D andar · Espaço pular · S abaixar · L esquiva · E falar · Tab autos"
+
+[node name="ItemLabel" type="Label" parent="HUD"]
+offset_left = 120.0
+offset_top = 40.0
+offset_right = 520.0
+offset_bottom = 60.0
+theme_override_colors/font_color = Color(0.95, 0.8, 0.45, 1)
+theme_override_font_sizes/font_size = 14
+text = "Gládio e pilum recebidos"
+horizontal_alignment = 1
 
 [node name="EndLabel" type="Label" parent="HUD"]
 offset_left = 120.0
