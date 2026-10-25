@@ -15,7 +15,7 @@ enum State { NORMAL, ATTACKING, DODGING, HURT }
 @export var friction := 1100.0
 
 @export_group("Pulo")
-@export var jump_velocity := -300.0
+@export var jump_velocity := -380.0
 @export var gravity := 900.0
 ## A queda é mais rápida que a subida: deixa o pulo com mais peso.
 @export var fall_gravity_multiplier := 1.6
