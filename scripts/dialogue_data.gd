@@ -20,7 +20,9 @@ const DIALOGUES := {
 		{"speaker": "Narrador", "text": "Vultos se movem dentro da neblina."},
 		{"speaker": "Bárbaro", "text": "É ele! Levem-no para casa!", "record": true},
 		{"speaker": "Lucius", "text": "Daniel, abaixa!", "record": true, "event": "lucius_aparece"},
-		{"speaker": "Lucius", "text": "Fica perto de mim e luta. J para o gládio, K para o pilum, L para esquivar."},
+		{"speaker": "Daniel", "text": "Eu nunca segurei uma espada na vida!"},
+		{"speaker": "Lucius", "text": "Então aprende agora. Toma meu gládio e o pilum.", "event": "lucius_entrega_arma"},
+		{"speaker": "Lucius", "text": "J para o gládio, K para arremessar o pilum, L para esquivar. Se vier machado, abaixa com S."},
 	],
 	"fronteira_resgate": [
 		{"speaker": "Lucius", "text": "Por pouco. Bárbaros não costumam errar duas vezes."},

@@ -1,5 +1,5 @@
 extends CharacterBody2D
-## Daniel no greybox: andar, pular, gládio, pilum e esquiva.
+## Daniel no greybox: andar, pular, abaixar, gládio, pilum e esquiva.
 ## Os valores com @export aparecem no Inspetor do Godot, então dá para
 ## ajustar a "sensação" do controle sem mexer no código.
 
@@ -26,7 +26,13 @@ enum State { NORMAL, ATTACKING, DODGING, HURT }
 ## Apertar pulo um pouco antes de tocar o chão também conta.
 @export var jump_buffer_time := 0.12
 
+@export_group("Abaixar")
+## Agachado, Daniel fica com metade da altura e projéteis altos passam por cima.
+@export var crouch_height := 14.0
+
 @export_group("Combate")
+## Sem armas, J e K não fazem nada. Na Fronteira, Lucius entrega o gládio e o pilum.
+@export var armed := true
 @export var max_health := 5
 @export var sword_damage := 1
 @export var attack_duration := 0.18
@@ -41,6 +47,7 @@ enum State { NORMAL, ATTACKING, DODGING, HURT }
 var state := State.NORMAL
 var facing := 1
 var health := max_health
+var crouching := false
 
 var _state_timer := 0.0
 var _coyote_timer := 0.0
@@ -49,20 +56,33 @@ var _attack_cooldown_timer := 0.0
 var _pilum_cooldown_timer := 0.0
 var _dodge_cooldown_timer := 0.0
 var _invincible_timer := 0.0
+var _forced_crouch_timer := 0.0
 var _hit_this_swing: Array[Node] = []
+var _stand_height := 0.0
 
 @onready var visual: Node2D = $Visual
 @onready var body_rect: ColorRect = $Visual/Body
 @onready var sword_hitbox: Area2D = $Visual/SwordHitbox
 @onready var sword_flash: ColorRect = $Visual/SwordHitbox/SwordFlash
+@onready var collision: CollisionShape2D = $CollisionShape2D
 
 
 func _ready() -> void:
 	health = max_health
+	# Cópia da forma, para encolher só este Daniel ao abaixar.
+	collision.shape = collision.shape.duplicate()
+	_stand_height = collision.shape.size.y
+
+
+## Faz Daniel se abaixar sozinho por um instante (usado nas cenas).
+func duck(duration: float) -> void:
+	_forced_crouch_timer = duration
 
 
 func _physics_process(delta: float) -> void:
 	_tick_timers(delta)
+	if state != State.NORMAL:
+		_set_crouching(false)
 	match state:
 		State.NORMAL:
 			_process_normal(delta)
@@ -99,6 +119,7 @@ func _tick_timers(delta: float) -> void:
 	_pilum_cooldown_timer -= delta
 	_dodge_cooldown_timer -= delta
 	_invincible_timer -= delta
+	_forced_crouch_timer -= delta
 
 
 func _process_normal(delta: float) -> void:
@@ -106,24 +127,42 @@ func _process_normal(delta: float) -> void:
 
 	# Durante um diálogo, Daniel para e não aceita comandos.
 	var can_act := not Dialogue.is_active
+	var wants_crouch := can_act and Input.is_action_pressed("crouch")
+	_set_crouching(is_on_floor() and (wants_crouch or _forced_crouch_timer > 0.0))
+
 	var direction := Input.get_axis("move_left", "move_right") if can_act else 0.0
+	if crouching:
+		# Agachado ele não anda, só vira para o lado apertado.
+		if direction != 0.0:
+			facing = int(signf(direction))
+		direction = 0.0
 	if direction != 0.0:
 		facing = int(signf(direction))
 		velocity.x = move_toward(velocity.x, direction * max_speed, acceleration * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, friction * delta)
 
-	if not can_act:
+	if not can_act or crouching:
 		return
 
 	_handle_jump()
 
-	if Input.is_action_just_pressed("attack") and _attack_cooldown_timer <= 0.0:
+	if armed and Input.is_action_just_pressed("attack") and _attack_cooldown_timer <= 0.0:
 		_start_attack()
-	elif Input.is_action_just_pressed("throw") and _pilum_cooldown_timer <= 0.0:
+	elif armed and Input.is_action_just_pressed("throw") and _pilum_cooldown_timer <= 0.0:
 		_throw_pilum()
 	elif Input.is_action_just_pressed("dodge") and _dodge_cooldown_timer <= 0.0 and is_on_floor():
 		_start_dodge()
+
+
+func _set_crouching(value: bool) -> void:
+	if value == crouching:
+		return
+	crouching = value
+	var height := crouch_height if crouching else _stand_height
+	collision.shape.size.y = height
+	collision.position.y = -height / 2.0
+	body_rect.offset_top = -height
 
 
 func _process_attacking(delta: float) -> void:

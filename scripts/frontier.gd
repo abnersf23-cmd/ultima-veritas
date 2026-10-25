@@ -4,9 +4,8 @@ extends "res://scripts/greybox_level.gd"
 ## Lucius aparece para salvá-lo e os dois conversam depois da luta.
 
 const PLATFORMS: Array[Rect2] = [
-	Rect2(-320, 0, 1760, 200), # chão
-	Rect2(-340, -400, 20, 600), # parede esquerda
-	Rect2(1440, -400, 20, 600), # parede direita
+	# O chão continua além da câmera, para a mata parecer aberta.
+	Rect2(-900, 0, 3000, 200),
 	# Mata: pedras e troncos para ensinar o pulo sem pressão.
 	Rect2(200, -24, 60, 24), # pedra
 	Rect2(330, -64, 90, 12), # galho
@@ -14,7 +13,12 @@ const PLATFORMS: Array[Rect2] = [
 	Rect2(580, -96, 80, 12), # galho alto
 	Rect2(700, -20, 120, 20), # árvore caída
 ]
-## A clareira da emboscada fica entre ARENA_LEFT e a parede direita.
+## Limites invisíveis da fase: Daniel não passa, mas não se vê parede nenhuma.
+const BOUNDS: Array[Rect2] = [
+	Rect2(-340, -400, 20, 600),
+	Rect2(1440, -400, 20, 600),
+]
+## A clareira da emboscada fica entre ARENA_LEFT e o limite direito.
 const ARENA_LEFT := 860.0
 ## Se Daniel morrer na luta, ele volta aqui em vez do começo da fase.
 const CHECKPOINT := Vector2(940, -1)
@@ -23,6 +27,8 @@ const FOG_CALM := 0.12
 const FOG_THICK := 0.26
 const FOG_CLEAR := 0.04
 const GROUND_COLOR := Color(0.27, 0.24, 0.21)
+const CONTROLS_UNARMED := "A/D andar · Espaço pular · S abaixar · L esquiva · E falar · Tab autos"
+const CONTROLS_ARMED := "A/D andar · Espaço pular · S abaixar · J gládio · K pilum · L esquiva · E falar · Tab autos"
 
 ## Continua valendo quando a cena recarrega depois da morte.
 static var reached_ambush := false
@@ -34,6 +40,8 @@ var _fog_bands: Array[ColorRect] = []
 
 @onready var lucius: Node2D = $Lucius
 @onready var end_label: Label = $HUD/EndLabel
+@onready var controls_label: Label = $HUD/ControlsLabel
+@onready var item_label: Label = $HUD/ItemLabel
 @onready var camera: Camera2D = $Player/Camera2D
 
 
@@ -41,6 +49,8 @@ func _ready() -> void:
 	platforms = PLATFORMS
 	platform_color = GROUND_COLOR
 	super()
+	for rect in BOUNDS:
+		create_platform(rect, platform_color, false)
 	_create_background()
 	_create_fog()
 	camera.limit_left = -340
@@ -48,6 +58,8 @@ func _ready() -> void:
 	camera.limit_bottom = 140
 	lucius.hide()
 	end_label.hide()
+	item_label.hide()
+	_set_armed(reached_ambush)
 
 	for enemy in get_tree().get_nodes_in_group("ambush"):
 		enemy.died.connect(_on_enemy_died)
@@ -81,8 +93,12 @@ func _process(delta: float) -> void:
 func _on_line_started(line: Dictionary) -> void:
 	match line.get("event", ""):
 		"lucius_aparece":
+			player.duck(0.8)
 			_throw_axe_over_player()
 			_show_lucius()
+		"lucius_entrega_arma":
+			_set_armed(true)
+			_show_item("Gládio e pilum recebidos")
 
 
 func _on_dialogue_finished(id: String) -> void:
@@ -98,7 +114,8 @@ func _on_dialogue_finished(id: String) -> void:
 func _start_fight() -> void:
 	reached_ambush = true
 	_set_fog(FOG_THICK, 0.8)
-	_arena_wall = create_platform(Rect2(ARENA_LEFT - 20, -400, 20, 400), Color(0.2, 0.22, 0.27))
+	# A clareira se fecha sem parede à vista: a neblina engrossa e Daniel não sai.
+	_arena_wall = create_platform(Rect2(ARENA_LEFT - 20, -400, 20, 400), platform_color, false)
 	for enemy in get_tree().get_nodes_in_group("ambush"):
 		enemy.activate()
 
@@ -117,6 +134,21 @@ func _on_enemy_died() -> void:
 	tween.tween_callback(Dialogue.start.bind("fronteira_resgate"))
 
 
+func _set_armed(value: bool) -> void:
+	player.armed = value
+	controls_label.text = CONTROLS_ARMED if value else CONTROLS_UNARMED
+
+
+func _show_item(text: String) -> void:
+	item_label.text = text
+	item_label.modulate.a = 1.0
+	item_label.show()
+	var tween := create_tween()
+	tween.tween_interval(2.0)
+	tween.tween_property(item_label, "modulate:a", 0.0, 0.6)
+	tween.tween_callback(item_label.hide)
+
+
 func _show_lucius() -> void:
 	lucius.global_position = Vector2(player.global_position.x - 60.0, 0)
 	lucius.modulate.a = 0.0
@@ -130,7 +162,7 @@ func _throw_axe_over_player() -> void:
 	axe.color = Color(0.55, 0.55, 0.6)
 	axe.size = Vector2(10, 6)
 	axe.pivot_offset = axe.size / 2.0
-	var y := player.global_position.y - 44.0
+	var y := player.global_position.y - 22.0
 	axe.position = Vector2(player.global_position.x + 260.0, y)
 	add_child(axe)
 	var tween := create_tween().set_parallel()
