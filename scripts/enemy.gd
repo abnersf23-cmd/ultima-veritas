@@ -1,6 +1,9 @@
 extends CharacterBody2D
 ## Bárbaro de teste: patrulha, persegue Daniel quando ele chega perto
 ## e é empurrado para trás ao ser atingido.
+## Com `active` desligado ele fica escondido na neblina até alguém chamar activate().
+
+signal died
 
 @export var max_health := 3
 @export var patrol_speed := 40.0
@@ -9,6 +12,7 @@ extends CharacterBody2D
 @export var gravity := 900.0
 @export var contact_damage := 1
 @export var stun_duration := 0.3
+@export var active := true
 
 var health := 0
 var direction := 1
@@ -24,6 +28,26 @@ var _player: Node2D
 
 func _ready() -> void:
 	health = max_health
+	if not active:
+		hide()
+		_set_awake(false)
+
+
+## Faz o bárbaro sair da neblina e entrar na luta.
+func activate() -> void:
+	if active:
+		return
+	active = true
+	_set_awake(true)
+	modulate.a = 0.0
+	show()
+	create_tween().tween_property(self, "modulate:a", 1.0, 0.4)
+
+
+func _set_awake(awake: bool) -> void:
+	set_physics_process(awake)
+	contact_area.set_deferred("monitoring", awake)
+	$CollisionShape2D.set_deferred("disabled", not awake)
 
 
 func _physics_process(delta: float) -> void:
@@ -86,6 +110,7 @@ func _flash() -> void:
 
 
 func _die() -> void:
+	died.emit()
 	set_physics_process(false)
 	contact_area.set_deferred("monitoring", false)
 	$CollisionShape2D.set_deferred("disabled", true)
