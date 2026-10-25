@@ -20,7 +20,8 @@ func _ready() -> void:
 	_on_player_health_changed(player.health, player.max_health)
 
 
-func create_platform(rect: Rect2, color := platform_color) -> StaticBody2D:
+## Com `visible_block` desligado vira um limite invisível (bom para áreas abertas).
+func create_platform(rect: Rect2, color := platform_color, visible_block := true) -> StaticBody2D:
 	var body := StaticBody2D.new()
 	body.position = rect.get_center()
 	body.collision_layer = 1
@@ -32,11 +33,12 @@ func create_platform(rect: Rect2, color := platform_color) -> StaticBody2D:
 	collision.shape = shape
 	body.add_child(collision)
 
-	var block := ColorRect.new()
-	block.color = color
-	block.size = rect.size
-	block.position = -rect.size / 2.0
-	body.add_child(block)
+	if visible_block:
+		var block := ColorRect.new()
+		block.color = color
+		block.size = rect.size
+		block.position = -rect.size / 2.0
+		body.add_child(block)
 
 	add_child(body)
 	return body
