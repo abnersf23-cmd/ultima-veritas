@@ -111,6 +111,37 @@ func _on_line_started(line: Dictionary) -> void:
 		"lucius_entrega_arma":
 			_set_armed(true)
 			_show_item("Gládio recebido")
+	_turn_to_speaker(line["speaker"])
+
+
+## Daniel olha para quem está falando; quem fala olha para Daniel.
+## Quando o próprio Daniel fala, ele continua olhando para a última pessoa que falou.
+func _turn_to_speaker(speaker: String) -> void:
+	var node := _speaker_node(speaker)
+	if node == null:
+		return
+	var side := signf(node.global_position.x - player.global_position.x)
+	if side != 0.0:
+		player.facing = int(side)
+	if node == lucius:
+		lucius.scale.x = -side
+
+
+func _speaker_node(speaker: String) -> Node2D:
+	match speaker:
+		"Lucius":
+			return lucius if lucius.visible else null
+		"Bárbaro":
+			# Quem grita é o bárbaro visível mais perto de Daniel.
+			var nearest: Node2D = null
+			var best := INF
+			for enemy in get_tree().get_nodes_in_group("ambush"):
+				var distance := absf(enemy.global_position.x - player.global_position.x)
+				if enemy.visible and distance < best:
+					nearest = enemy
+					best = distance
+			return nearest
+	return null
 
 
 func _on_dialogue_finished(id: String) -> void:
@@ -167,6 +198,7 @@ func _show_item(text: String) -> void:
 
 func _show_lucius() -> void:
 	lucius.global_position = Vector2(player.global_position.x - 60.0, 0)
+	lucius.scale.x = 1.0 # surge à esquerda, olhando para Daniel
 	lucius.modulate.a = 0.0
 	lucius.show()
 	create_tween().tween_property(lucius, "modulate:a", 1.0, 0.3)
